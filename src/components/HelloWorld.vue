@@ -1,58 +1,131 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div class="chat-container">
+    <el-container>
+      <el-aside class="el-aside"></el-aside>
+      <el-container>
+        <el-main class="el-main">
+          <div class="chat-history">
+            <div class="message" v-for="message in messages" :key="message.id">
+              <div v-if="message.isBot" class="bot-message">{{ message.text }}</div>
+              <div v-else class="user-message">{{ message.text }}</div>
+            </div>
+          </div>
+        </el-main>
+        <el-footer class="el-footer">
+          <el-input v-model="inputText" placeholder="请输入消息" @keyup.enter="sendMessage" class="queryInput"/>
+        </el-footer>
+      </el-container>
+    </el-container>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
+  name: "HelloWorld",
+  data() {
+    return {
+      messages: [
+        {
+          isBot: true,
+          text: "hello,how can i help you"
+        },
+        {
+          isBot: false,
+          text: "hello,how can i help you"
+        },
+        {
+          isBot: true,
+          text: "hello,how can i help you"
+        },
+        {
+          isBot: false,
+          text: "hello,how can i help you"
+        },
+        {
+          isBot: true,
+          text: "hello,how can i help you"
+        },
+
+
+      ], // 存储聊天历史记录的数组
+      inputText: "" // 输入框的文本
+    };
+  },
+  methods: {
+    sendMessage() {
+      if (!this.inputText.trim()) {
+        return;
+      }
+      this.messages.push({
+        id: new Date().getTime(),
+        text: this.inputText,
+        isBot: false
+      });
+      this.inputText = "";
+      // TODO: 发送消息给聊天机器人 API 或 SDK
+    }
   }
-}
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
+<style>
+
+.el-aside {
+  background-color: #D3DCE6;
+  color: #333;
+  text-align: center;
+  line-height: 200px;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+
+.el-main {
+  background-color: #E9EEF3;
+  color: #333;
+  text-align: center;
+  height: 80%;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+
+.el-footer{
+  background-color: #E9EEF3;
 }
-a {
-  color: #42b983;
+
+.queryInput{
+  width: 800px;
+}
+
+.chat-container {
+  height: 93vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-history {
+  flex-grow: 1;
+  /*overflow-y: scroll;*/
+  /*padding: 20px;*/
+}
+
+.message {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.bot-message {
+  background-color: #f5f5f5;
+  color: #333;
+  padding: 10px;
+  border-radius: 5px;
+  align-self: flex-start;
+  /*max-width: 80%;*/
+}
+
+.user-message {
+  background-color: #409eff;
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  align-self: flex-end;
+  /*max-width: 80%;*/
 }
 </style>
